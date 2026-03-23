@@ -16,7 +16,6 @@ function toAuditSnapshot(record: {
   updatedAt: Date;
 }) {
   return {
-    id: record.id,
     author: record.author,
     email: record.email,
     message: record.message,

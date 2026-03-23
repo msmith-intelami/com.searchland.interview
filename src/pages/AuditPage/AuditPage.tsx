@@ -35,7 +35,7 @@ export function AuditPage() {
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-semibold text-slate-900">{event.action}</h3>
                   <span className="rounded-sm bg-emerald-100 px-3 py-1 text-xs uppercase tracking-[0.25em] text-emerald-800">
-                    {event.entity} #{event.entityId}
+                    {event.entity}
                   </span>
                 </div>
                 <p className="mt-2 text-sm text-slate-500">Actor: {event.actor?.email ?? "unknown"}</p>
