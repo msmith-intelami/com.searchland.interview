@@ -1,6 +1,7 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import { RequireAuth } from "./auth/RequireAuth";
+import { AuditPage } from "./pages/AuditPage";
 import { FeedbackPage } from "./pages/FeedbackPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -39,6 +40,9 @@ function AppShell() {
                 <NavLink to="/feedback" className={navClassName}>
                   Feedback
                 </NavLink>
+                <NavLink to="/audit" className={navClassName}>
+                  Audit
+                </NavLink>
                 <button
                   type="button"
                   onClick={auth.logout}
@@ -64,6 +68,14 @@ function AppShell() {
               element={
                 <RequireAuth>
                   <FeedbackPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/audit"
+              element={
+                <RequireAuth>
+                  <AuditPage />
                 </RequireAuth>
               }
             />

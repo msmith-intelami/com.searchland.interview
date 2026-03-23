@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "packageManager": "npm@10",
   "scripts": {
     "dev": "concurrently \"npm:dev:web\" \"npm:dev:server\"",
     "dev:web": "vite",
@@ -10,7 +11,7 @@
     "build": "npm run build:web && npm run build:server",
     "build:web": "vite build",
     "build:server": "tsc -p tsconfig.server.json",
-    "start": "node dist/server/index.js",
+    "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.server.json --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -26,10 +27,10 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.40.0",
     "express": "^4.21.2",
-    "inversify": "^6.0.3",
-    "inversify-express-utils": "^6.5.0",
+    "inversify": "6.2.2",
+    "inversify-express-utils": "6.5.0",
     "jsonwebtoken": "^9.0.3",
-    "mongodb": "^6.16.0",
+    "mongodb": "^6.21.0",
     "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -55,5 +56,9 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vite": "^6.2.2"
+  },
+  "overrides": {
+    "inversify": "6.2.2",
+    "inversify-express-utils": "6.5.0"
   }
 }

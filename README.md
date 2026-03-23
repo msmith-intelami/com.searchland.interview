@@ -35,3 +35,4 @@ API runs on `http://localhost:3001`.
 - If `RABBITMQ_URL` is set, feedback create, update, and delete operations publish audit messages to the configured exchange and queue.
 - If both `RABBITMQ_URL` and `MONGODB_URL` are set, the server consumes audit messages and stores them in MongoDB.
 - Authenticated users can view only their own processed audit documents from the Audit page.
+- Set `AUDIT_DEBUG=true` to log RabbitMQ publish/consume and Mongo persistence activity in the server console.

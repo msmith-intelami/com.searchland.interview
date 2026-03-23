@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { clearStoredToken, readStoredToken, storeToken, type AuthState, type AuthUser } from "../lib/auth";
-import { trpc } from "../main";
+import { fetchAuthenticatedUser } from "../lib/authApi";
 
 type AuthContextValue = AuthState & {
   isReady: boolean;
@@ -14,11 +14,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider(props: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({ token: null, user: null });
   const [isReady, setIsReady] = useState(false);
-
-  const meQuery = trpc.auth.me.useQuery(undefined, {
-    enabled: Boolean(authState.token),
-    retry: false,
-  });
 
   useEffect(() => {
     const token = readStoredToken();
@@ -37,18 +32,31 @@ export function AuthProvider(props: { children: ReactNode }) {
       return;
     }
 
-    if (meQuery.data?.user) {
-      setAuthState((current) => ({ ...current, user: meQuery.data.user }));
-      setIsReady(true);
-      return;
-    }
+    let cancelled = false;
 
-    if (meQuery.isError) {
-      clearStoredToken();
-      setAuthState({ token: null, user: null });
-      setIsReady(true);
-    }
-  }, [authState.token, meQuery.data, meQuery.isError]);
+    void fetchAuthenticatedUser(authState.token)
+      .then((result) => {
+        if (cancelled) {
+          return;
+        }
+
+        setAuthState((current) => ({ ...current, user: result.user }));
+        setIsReady(true);
+      })
+      .catch(() => {
+        if (cancelled) {
+          return;
+        }
+
+        clearStoredToken();
+        setAuthState({ token: null, user: null });
+        setIsReady(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authState.token]);
 
   function login(token: string, user: AuthUser) {
     storeToken(token);

@@ -3,11 +3,12 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "dist/server",
+    "rootDir": "server",
+    "outDir": "dist",
     "noEmit": false,
     "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["server", "drizzle.config.ts"]
+  "include": ["server"]
 }

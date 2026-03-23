@@ -2,7 +2,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
-import { trpc } from "../main";
+import { loginWithPassword } from "../lib/authApi";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -11,22 +11,23 @@ export function LoginPage() {
   const [email, setEmail] = useState("admin@example.com");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (result) => {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const result = await loginWithPassword({ email, password });
       auth.login(result.token, result.user);
       const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? "/feedback";
       navigate(redirectTo, { replace: true });
-    },
-    onError: () => {
+    } catch {
       setError("Invalid credentials.");
-    },
-  });
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    loginMutation.mutate({ email, password });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -59,10 +60,10 @@ export function LoginPage() {
         {error ? <p className="text-sm text-rose-300">{error}</p> : null}
         <button
           type="submit"
-          disabled={loginMutation.isPending}
+          disabled={isSubmitting}
           className="w-full rounded-full bg-cyan-400 px-5 py-3 font-medium text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-900"
         >
-          {loginMutation.isPending ? "Signing in..." : "Sign in"}
+          {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </section>

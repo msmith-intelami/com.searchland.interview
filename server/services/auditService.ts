@@ -2,6 +2,7 @@ import amqp, { type Channel, type ChannelModel } from "amqplib";
 import { injectable } from "inversify";
 import type { AuthUser } from "../models/auth.js";
 import type { AuditAction, AuditEntity, AuditEvent } from "../models/audit.js";
+import { logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditService {
@@ -18,6 +19,7 @@ export class AuditService {
     const channel = await this.getChannel();
 
     if (!channel) {
+      logAuditDebug("publish skipped because RabbitMQ channel is unavailable");
       return;
     }
 
@@ -36,15 +38,25 @@ export class AuditService {
       metadata: input.metadata,
     };
 
-    channel.publish(
+    const routingKey = `${input.entity}.${input.action}`;
+    const published = channel.publish(
       this.getExchangeName(),
-      `${input.entity}.${input.action}`,
+      routingKey,
       Buffer.from(JSON.stringify(event)),
       {
         contentType: "application/json",
         persistent: true,
       },
     );
+
+    logAuditDebug("published audit event", {
+      exchange: this.getExchangeName(),
+      queue: this.getQueueName(),
+      routingKey,
+      published,
+      entityId: input.entityId,
+      actorId: input.actor?.id ?? null,
+    });
   }
 
   private async getChannel() {
@@ -59,6 +71,7 @@ export class AuditService {
     const connection = await this.getConnection();
 
     if (!connection) {
+      logAuditDebug("publisher channel not created because RabbitMQ connection is unavailable");
       return null;
     }
 
@@ -70,6 +83,12 @@ export class AuditService {
     await channel.assertQueue(queueName, { durable: true });
     await channel.bindQueue(queueName, exchangeName, "feedback.feedback.*");
 
+    logAuditDebug("publisher channel ready", {
+      exchangeName,
+      queueName,
+      bindingPattern: "feedback.feedback.*",
+    });
+
     return channel;
   }
 
@@ -77,10 +96,12 @@ export class AuditService {
     const url = process.env.RABBITMQ_URL;
 
     if (!url) {
+      logAuditDebug("publisher connection skipped because RABBITMQ_URL is not set");
       return null;
     }
 
     if (!this.connectionPromise) {
+      logAuditDebug("connecting RabbitMQ publisher", { url });
       this.connectionPromise = amqp.connect(url).catch((error: unknown) => {
         console.error("RabbitMQ connection failed", error);
         this.connectionPromise = null;
