@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm:dev:web\" \"npm:dev:server\"",
     "dev:web": "vite",
-    "dev:server": "tsx watch server/index.ts",
+    "dev:server": "tsx watch --tsconfig tsconfig.server.json server/index.ts",
     "build": "npm run build:web && npm run build:server",
     "build:web": "vite build",
     "build:server": "tsc -p tsconfig.server.json",
@@ -25,15 +25,18 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.40.0",
     "express": "^4.21.2",
+    "inversify": "^6.0.3",
+    "inversify-express-utils": "^6.5.0",
     "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.5.0",
+    "reflect-metadata": "^0.2.2",
     "superjson": "^2.2.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/node": "^22.13.11",
@@ -43,7 +46,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
     "drizzle-kit": "^0.30.4",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.2.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vite": "^6.2.2"
