@@ -40,7 +40,8 @@ export const appRouter = router({
     }),
 
     update: protectedProcedure.input(feedbackUpdateSchema).mutation(async ({ ctx, input }) => {
-      const updated = await feedbackService.update(input.id, input, ctx.user);
+      const { id, ...payload } = input;
+      const updated = await feedbackService.update(id, payload, ctx.user);
 
       if (!updated) {
         throw new TRPCError({

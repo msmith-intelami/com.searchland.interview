@@ -26,7 +26,7 @@ function AppShell() {
   const auth = useAuth();
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(120,214,178,0.22),_transparent_32%),linear-gradient(180deg,_#f7fcf7_0%,_#eef8f1_52%,_#fbfdf8_100%)] text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(120,214,178,0.14),_transparent_30%),linear-gradient(180deg,_#f8f6f1_0%,_#f6f4ee_52%,_#fbfaf6_100%)] text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8">
         <header className="mb-10 flex flex-col gap-6 rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)] backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>

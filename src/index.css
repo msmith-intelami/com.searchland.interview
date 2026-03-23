@@ -3,10 +3,10 @@
 :root {
   color: #1f3a37;
   background:
-    radial-gradient(circle at top left, rgba(124, 214, 179, 0.24), transparent 30%),
-    linear-gradient(180deg, #f7fcf7 0%, #eef8f1 55%, #f9fdf8 100%);
+    radial-gradient(circle at top left, rgba(124, 214, 179, 0.14), transparent 30%),
+    linear-gradient(180deg, #f8f6f1 0%, #f5f2ea 55%, #fbfaf6 100%);
   font-family: "Manrope", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --page-bg: #f6fbf6;
+  --page-bg: #f7f4ee;
   --surface: rgba(255, 255, 255, 0.78);
   --surface-strong: #ffffff;
   --border-soft: rgba(42, 84, 71, 0.12);
