@@ -1,75 +1,77 @@
-import assert from "node:assert/strict";
-import { mock } from "node:test";
-import test from "node:test";
-import { fetchAuthenticatedUser, loginWithPassword } from "../../src/shared/services/authApi.ts";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { fetchAuthenticatedUser, loginWithPassword } from "../../src/shared/services/authApi";
 
-test("loginWithPassword posts credentials to the auth login endpoint", async () => {
-  const restoreFetch = mock.method(globalThis, "fetch", async (input: string | URL | Request, init?: RequestInit) => {
-    assert.equal(String(input), "http://localhost:3001/auth/login");
-    assert.equal(init?.method, "POST");
-    assert.deepEqual(init?.headers, {
-      "content-type": "application/json",
-    });
-    assert.equal(init?.body, JSON.stringify({ email: "admin@example.com", password: "password123" }));
+describe("authApi", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
-    return new Response(
-      JSON.stringify({
-        token: "jwt-token",
-        user: {
-          id: "1",
-          email: "admin@example.com",
-          name: "Admin User",
-        },
-      }),
-      { status: 200, headers: { "content-type": "application/json" } },
+  it("posts credentials to the auth login endpoint", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          token: "jwt-token",
+          user: {
+            id: "1",
+            email: "admin@example.com",
+            name: "Admin User",
+          },
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      ),
     );
-  });
 
-  const result = await loginWithPassword({
-    email: "admin@example.com",
-    password: "password123",
-  });
-
-  assert.deepEqual(result, {
-    token: "jwt-token",
-    user: {
-      id: "1",
+    const result = await loginWithPassword({
       email: "admin@example.com",
-      name: "Admin User",
-    },
-  });
-
-  restoreFetch.mock.restore();
-});
-
-test("fetchAuthenticatedUser sends the bearer token to the auth me endpoint", async () => {
-  const restoreFetch = mock.method(globalThis, "fetch", async (input: string | URL | Request, init?: RequestInit) => {
-    assert.equal(String(input), "http://localhost:3001/auth/me");
-    assert.deepEqual(init?.headers, {
-      authorization: "Bearer session-token",
+      password: "password123",
     });
 
-    return new Response(
-      JSON.stringify({
-        user: {
-          id: "1",
-          email: "admin@example.com",
-          name: "Admin User",
-        },
-      }),
-      { status: 200, headers: { "content-type": "application/json" } },
+    expect(globalThis.fetch).toHaveBeenCalledWith("http://localhost:3001/auth/login", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ email: "admin@example.com", password: "password123" }),
+    });
+
+    expect(result).toEqual({
+      token: "jwt-token",
+      user: {
+        id: "1",
+        email: "admin@example.com",
+        name: "Admin User",
+      },
+    });
+  });
+
+  it("sends the bearer token to the auth me endpoint", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          user: {
+            id: "1",
+            email: "admin@example.com",
+            name: "Admin User",
+          },
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      ),
     );
+
+    const result = await fetchAuthenticatedUser("session-token");
+
+    expect(globalThis.fetch).toHaveBeenCalledWith("http://localhost:3001/auth/me", {
+      headers: {
+        authorization: "Bearer session-token",
+      },
+    });
+
+    expect(result).toEqual({
+      user: {
+        id: "1",
+        email: "admin@example.com",
+        name: "Admin User",
+      },
+    });
   });
-
-  const result = await fetchAuthenticatedUser("session-token");
-
-  assert.deepEqual(result, {
-    user: {
-      id: "1",
-      email: "admin@example.com",
-      name: "Admin User",
-    },
-  });
-
-  restoreFetch.mock.restore();
 });

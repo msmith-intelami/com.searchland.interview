@@ -1,45 +1,25 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { describe, expect, it } from "vitest";
 import {
   AUTH_TOKEN_STORAGE_KEY,
   clearStoredToken,
   readStoredToken,
   storeToken,
-} from "../../src/shared/auth/storage.ts";
+} from "../../src/shared/auth/storage";
 
-function installWindowStorageMock() {
-  const values = new Map<string, string>();
+describe("storage", () => {
+  it("persists and clears the auth token", () => {
+    window.localStorage.clear();
 
-  Object.defineProperty(globalThis, "window", {
-    value: {
-      localStorage: {
-        getItem(key: string) {
-          return values.has(key) ? values.get(key)! : null;
-        },
-        setItem(key: string, value: string) {
-          values.set(key, value);
-        },
-        removeItem(key: string) {
-          values.delete(key);
-        },
-      },
-    },
-    configurable: true,
+    expect(readStoredToken()).toBeNull();
+
+    storeToken("session-token");
+    expect(readStoredToken()).toBe("session-token");
+
+    clearStoredToken();
+    expect(readStoredToken()).toBeNull();
   });
-}
 
-test("storage helpers persist and clear the auth token", () => {
-  installWindowStorageMock();
-
-  assert.equal(readStoredToken(), null);
-
-  storeToken("session-token");
-  assert.equal(readStoredToken(), "session-token");
-
-  clearStoredToken();
-  assert.equal(readStoredToken(), null);
-});
-
-test("storage helpers use the shared auth token key", () => {
-  assert.equal(AUTH_TOKEN_STORAGE_KEY, "searchland.auth.token");
+  it("uses the shared auth token storage key", () => {
+    expect(AUTH_TOKEN_STORAGE_KEY).toBe("searchland.auth.token");
+  });
 });

@@ -13,7 +13,9 @@
     "build:server": "tsc -p tsconfig.server.json",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.server.json --noEmit",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "npm run test:server && npm run test:frontend",
+    "test:server": "tsx --test tests/server/**/*.test.ts",
+    "test:frontend": "vitest run tests/frontend",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -44,6 +46,9 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/amqplib": "^0.10.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
@@ -55,10 +60,12 @@
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
     "drizzle-kit": "^0.30.4",
+    "jsdom": "^29.0.1",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "vitest": "^4.1.1"
   },
   "overrides": {
     "inversify": "6.2.2",
