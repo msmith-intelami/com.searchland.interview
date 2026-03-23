@@ -3,11 +3,16 @@ import type { Filter } from "mongodb";
 import { getDocumentCollection } from "../db/documentClient.js";
 import type { AuthUser } from "../models/auth.js";
 import type { AuditEvent, StoredAuditEvent } from "../models/audit.js";
-import { logAuditDebug } from "../utils/debug.js";
+import { isAuditSystemEnabled, logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditLogService {
   public async insert(event: AuditEvent, routingKey: string) {
+    if (!isAuditSystemEnabled()) {
+      logAuditDebug("Mongo insert skipped because audit system is disabled", { routingKey });
+      return;
+    }
+
     const collection = await this.getCollection();
 
     if (!collection) {
@@ -29,6 +34,10 @@ export class AuditLogService {
   }
 
   public async listForUser(user: AuthUser) {
+    if (!isAuditSystemEnabled()) {
+      return [];
+    }
+
     const collection = await this.getCollection();
 
     if (!collection) {

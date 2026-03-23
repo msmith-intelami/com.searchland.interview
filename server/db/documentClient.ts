@@ -1,9 +1,14 @@
 import "dotenv/config";
 import { MongoClient } from "mongodb";
+import { isAuditSystemEnabled } from "../utils/debug.js";
 
 let clientPromise: Promise<MongoClient | null> | null = null;
 
 export async function getDocumentClient() {
+  if (!isAuditSystemEnabled()) {
+    return null;
+  }
+
   const url = process.env.MONGODB_URL;
 
   if (!url) {

@@ -1,3 +1,7 @@
+export function isAuditSystemEnabled() {
+  return process.env.AUDIT_ENABLED === "true";
+}
+
 export function isAuditDebugEnabled() {
   return process.env.AUDIT_DEBUG === "true";
 }

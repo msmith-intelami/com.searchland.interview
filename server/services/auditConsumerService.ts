@@ -2,7 +2,7 @@ import amqp, { type Channel, type ChannelModel, type ConsumeMessage } from "amqp
 import { injectable } from "inversify";
 import { auditLogService } from "./auditLogService.js";
 import type { AuditEvent } from "../models/audit.js";
-import { logAuditDebug } from "../utils/debug.js";
+import { isAuditSystemEnabled, logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditConsumerService {
@@ -11,6 +11,11 @@ export class AuditConsumerService {
   private started = false;
 
   public async start() {
+    if (!isAuditSystemEnabled()) {
+      logAuditDebug("consumer start skipped because audit system is disabled");
+      return;
+    }
+
     if (this.started) {
       logAuditDebug("consumer start skipped because it is already running");
       return;
@@ -94,6 +99,11 @@ export class AuditConsumerService {
   }
 
   private async getConnection() {
+    if (!isAuditSystemEnabled()) {
+      logAuditDebug("consumer connection skipped because audit system is disabled");
+      return null;
+    }
+
     const url = process.env.RABBITMQ_URL;
 
     if (!url) {

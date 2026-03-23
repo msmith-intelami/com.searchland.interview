@@ -2,7 +2,7 @@ import amqp, { type Channel, type ChannelModel } from "amqplib";
 import { injectable } from "inversify";
 import type { AuthUser } from "../models/auth.js";
 import type { AuditAction, AuditEntity, AuditEvent } from "../models/audit.js";
-import { logAuditDebug } from "../utils/debug.js";
+import { isAuditSystemEnabled, logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditService {
@@ -16,6 +16,11 @@ export class AuditService {
     actor: AuthUser | null;
     metadata?: Record<string, unknown>;
   }) {
+    if (!isAuditSystemEnabled()) {
+      logAuditDebug("publish skipped because audit system is disabled");
+      return;
+    }
+
     const channel = await this.getChannel();
 
     if (!channel) {
@@ -93,6 +98,11 @@ export class AuditService {
   }
 
   private async getConnection() {
+    if (!isAuditSystemEnabled()) {
+      logAuditDebug("publisher connection skipped because audit system is disabled");
+      return null;
+    }
+
     const url = process.env.RABBITMQ_URL;
 
     if (!url) {
