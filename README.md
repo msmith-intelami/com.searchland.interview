@@ -33,7 +33,7 @@ API runs on `http://localhost:3001`.
 - REST controllers live under `server/controllers`.
 - Protected routes require a bearer token.
 - Login users are stored in Postgres and passwords are verified against a bcrypt hash.
-- The seed command uses `SEED_USER_NAME`, `SEED_USER_EMAIL`, and `SEED_USER_PASSWORD`.
+- The seed command uses `SEED_USER_NAME`, `SEED_USER_EMAIL`, and `SEED_USER_PASSWORD` .
 - If `RABBITMQ_URL` is set, feedback create, update, and delete operations publish audit messages to the configured exchange and queue.
 - If both `RABBITMQ_URL` and `MONGODB_URL` are set, the server consumes audit messages and stores them in MongoDB.
 - Authenticated users can view only their own processed audit documents from the Audit page.
