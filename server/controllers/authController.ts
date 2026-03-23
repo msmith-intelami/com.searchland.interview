@@ -19,7 +19,7 @@ export class AuthController implements interfaces.Controller {
       return;
     }
 
-    const result = this.authService.login(parsed.data);
+    const result = await this.authService.login(parsed.data);
 
     if (!result) {
       res.status(401).json({ error: "Invalid credentials." });

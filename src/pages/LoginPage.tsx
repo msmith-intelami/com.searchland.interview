@@ -31,7 +31,7 @@ export function LoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-md rounded-[2.25rem] border border-[var(--border-soft)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
+    <section className="mx-auto max-w-md rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
       <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">Authentication</p>
       <h2 className="mt-3 text-3xl font-semibold text-slate-900">Sign in</h2>
       <p className="mt-3 text-slate-600">Use the configured app credentials to access protected feedback routes.</p>
@@ -44,7 +44,7 @@ export function LoginPage() {
             onChange={(event) => setEmail(event.target.value)}
             type="email"
             required
-            className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
+            className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
           />
         </label>
         <label className="block">
@@ -54,14 +54,14 @@ export function LoginPage() {
             onChange={(event) => setPassword(event.target.value)}
             type="password"
             required
-            className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
+            className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
           />
         </label>
         {error ? <p className="text-sm text-rose-600">{error}</p> : null}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-full bg-emerald-600 px-5 py-3 font-semibold text-emerald-50 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
+          className="w-full rounded-md bg-emerald-600 px-5 py-3 font-semibold text-emerald-50 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
         >
           {isSubmitting ? "Signing in..." : "Sign in"}
         </button>

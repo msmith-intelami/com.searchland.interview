@@ -8,7 +8,7 @@ import { LoginPage } from "./pages/LoginPage";
 
 const navClassName = ({ isActive }: { isActive: boolean }) =>
   [
-    "rounded-full px-4 py-2 text-sm font-semibold transition",
+    "rounded-md px-4 py-2 text-sm font-semibold transition",
     isActive
       ? "bg-emerald-600 text-emerald-50 shadow-[0_16px_32px_rgba(21,164,111,0.22)]"
       : "text-slate-600 hover:bg-white/80 hover:text-slate-900",
@@ -28,7 +28,7 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(120,214,178,0.22),_transparent_32%),linear-gradient(180deg,_#f7fcf7_0%,_#eef8f1_52%,_#fbfdf8_100%)] text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8">
-        <header className="mb-10 flex flex-col gap-6 rounded-[2rem] border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)] backdrop-blur md:flex-row md:items-center md:justify-between">
+        <header className="mb-10 flex flex-col gap-6 rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)] backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">Searchland Interview App</p>
             <h1 className="mt-2 text-3xl font-semibold text-slate-900">Feedback workspace</h1>
@@ -48,7 +48,7 @@ function AppShell() {
                 <button
                   type="button"
                   onClick={auth.logout}
-                  className="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-white/80 hover:text-slate-900"
+                  className="rounded-md px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-white/80 hover:text-slate-900"
                 >
                   Sign out
                 </button>

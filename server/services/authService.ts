@@ -1,29 +1,32 @@
+import { compare } from "bcryptjs";
+import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import { injectable } from "inversify";
+import { db } from "../db/client.js";
+import { users } from "../db/schema.js";
 import type { AuthUser, LoginInput } from "../models/auth.js";
 
 type AuthTokenPayload = AuthUser;
 
-const DEFAULT_USER = {
-  id: "demo-user",
-  email: "admin@example.com",
-  name: "Demo Admin",
-  password: "password123",
-};
-
 @injectable()
 export class AuthService {
-  public login(input: LoginInput) {
-    const configuredUser = this.getConfiguredUser();
+  public async login(input: LoginInput) {
+    const [userRecord] = await db.select().from(users).where(eq(users.email, input.email)).limit(1);
 
-    if (input.email !== configuredUser.email || input.password !== configuredUser.password) {
+    if (!userRecord) {
+      return null;
+    }
+
+    const matches = await compare(input.password, userRecord.passwordHash);
+
+    if (!matches) {
       return null;
     }
 
     const user: AuthUser = {
-      id: configuredUser.id,
-      email: configuredUser.email,
-      name: configuredUser.name,
+      id: String(userRecord.id),
+      email: userRecord.email,
+      name: userRecord.name,
     };
 
     const token = jwt.sign(user, this.getJwtSecret(), {
@@ -45,15 +48,6 @@ export class AuthService {
     } catch {
       return null;
     }
-  }
-
-  private getConfiguredUser() {
-    return {
-      id: process.env.AUTH_USER_ID ?? DEFAULT_USER.id,
-      email: process.env.AUTH_USER_EMAIL ?? DEFAULT_USER.email,
-      name: process.env.AUTH_USER_NAME ?? DEFAULT_USER.name,
-      password: process.env.AUTH_USER_PASSWORD ?? DEFAULT_USER.password,
-    };
   }
 
   private getJwtSecret() {

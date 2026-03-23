@@ -28,21 +28,23 @@ app.use((req, _res, next) => {
 });
 
 app.post("/auth/login", (req: Request, res: Response) => {
-  const parsed = loginInputSchema.safeParse(req.body);
+  void (async () => {
+    const parsed = loginInputSchema.safeParse(req.body);
 
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.flatten() });
-    return;
-  }
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.flatten() });
+      return;
+    }
 
-  const result = authService.login(parsed.data);
+    const result = await authService.login(parsed.data);
 
-  if (!result) {
-    res.status(401).json({ error: "Invalid credentials." });
-    return;
-  }
+    if (!result) {
+      res.status(401).json({ error: "Invalid credentials." });
+      return;
+    }
 
-  res.json(result);
+    res.json(result);
+  })();
 });
 
 app.get("/auth/me", (req: Request, res: Response) => {

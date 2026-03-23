@@ -82,7 +82,7 @@ export function FeedbackPage() {
     <section className="grid gap-6 lg:grid-cols-[420px_1fr]">
       <form
         onSubmit={handleSubmit}
-        className="h-fit rounded-[2.25rem] border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)]"
+        className="h-fit rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)]"
       >
         <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">{editingId ? "Edit" : "New"} feedback</p>
         <div className="mt-6 space-y-4">
@@ -91,7 +91,7 @@ export function FeedbackPage() {
               required
               value={form.author}
               onChange={(event) => setForm((current) => ({ ...current, author: event.target.value }))}
-              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
+              className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
               placeholder="Alicia"
             />
           </Field>
@@ -101,7 +101,7 @@ export function FeedbackPage() {
               type="email"
               value={form.email}
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
+              className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
               placeholder="alicia@example.com"
             />
           </Field>
@@ -111,7 +111,7 @@ export function FeedbackPage() {
               rows={5}
               value={form.message}
               onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))}
-              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
+              className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
               placeholder="The onboarding flow felt..."
             />
           </Field>
@@ -121,7 +121,7 @@ export function FeedbackPage() {
               onChange={(event) =>
                 setForm((current) => ({ ...current, status: event.target.value as FormState["status"] }))
               }
-              className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
+              className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
             >
               <option value="new">new</option>
               <option value="reviewed">reviewed</option>
@@ -133,7 +133,7 @@ export function FeedbackPage() {
           <button
             type="submit"
             disabled={isSaving}
-            className="rounded-full bg-emerald-600 px-5 py-3 font-semibold text-emerald-50 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
+            className="rounded-md bg-emerald-600 px-5 py-3 font-semibold text-emerald-50 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
           >
             {isSaving ? "Saving..." : submitLabel}
           </button>
@@ -144,7 +144,7 @@ export function FeedbackPage() {
                 setEditingId(null);
                 setForm(emptyForm);
               }}
-              className="rounded-full border border-[var(--border-strong)] px-5 py-3 text-slate-700 transition hover:bg-white"
+              className="rounded-md border border-[var(--border-strong)] px-5 py-3 text-slate-700 transition hover:bg-white"
             >
               Cancel
             </button>
@@ -152,15 +152,15 @@ export function FeedbackPage() {
         </div>
       </form>
 
-      <div className="rounded-[2.25rem] border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)]">
+      <div className="rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-6 shadow-[var(--shadow-soft)]">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">Feedback list</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-900">Live records from Postgres</h2>
           </div>
           <div className="flex items-center gap-3">
-            <span className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">{auth.user?.email}</span>
-            <span className="rounded-full border border-[var(--border-soft)] bg-white px-4 py-2 text-sm text-slate-600">
+            <span className="rounded-sm border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">{auth.user?.email}</span>
+            <span className="rounded-sm border border-[var(--border-soft)] bg-white px-4 py-2 text-sm text-slate-600">
               {sortedFeedback.length} items
             </span>
           </div>
@@ -174,12 +174,12 @@ export function FeedbackPage() {
           ) : null}
 
           {sortedFeedback.map((item) => (
-            <article key={item.id} className="rounded-[1.75rem] border border-[var(--border-soft)] bg-white p-5 shadow-[0_18px_40px_rgba(31,58,55,0.05)]">
+            <article key={item.id} className="rounded-md border border-[var(--border-soft)] bg-white p-5 shadow-[0_18px_40px_rgba(31,58,55,0.05)]">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-semibold text-slate-900">{item.author}</h3>
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs uppercase tracking-[0.25em] text-emerald-800">
+                    <span className="rounded-sm bg-emerald-100 px-3 py-1 text-xs uppercase tracking-[0.25em] text-emerald-800">
                       {item.status}
                     </span>
                   </div>
@@ -194,14 +194,14 @@ export function FeedbackPage() {
                 <button
                   type="button"
                   onClick={() => startEdit(item)}
-                  className="rounded-full border border-[var(--border-strong)] px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  className="rounded-md border border-[var(--border-strong)] px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => deleteFeedback.mutate({ id: item.id })}
-                  className="rounded-full border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50"
+                  className="rounded-md border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50"
                 >
                   Delete
                 </button>
@@ -225,7 +225,7 @@ function Field(props: { label: string; children: ReactNode }) {
 
 function EmptyState(props: { label: string }) {
   return (
-    <div className="rounded-[1.5rem] border border-dashed border-emerald-100 bg-emerald-50/60 p-6 text-center text-slate-500">
+    <div className="rounded-md border border-dashed border-emerald-100 bg-emerald-50/60 p-6 text-center text-slate-500">
       {props.label}
     </div>
   );

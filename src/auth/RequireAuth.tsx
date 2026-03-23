@@ -8,7 +8,9 @@ export function RequireAuth(props: { children: ReactElement }) {
 
   if (!auth.isReady) {
     return (
-      <div className="rounded-[2rem] border border-white/10 bg-slate-900/60 p-8 text-slate-300">Checking session...</div>
+      <div className="rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-8 text-slate-600 shadow-[var(--shadow-soft)]">
+        Checking session...
+      </div>
     );
   }
 

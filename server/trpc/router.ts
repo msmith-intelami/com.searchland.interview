@@ -8,8 +8,8 @@ import { protectedProcedure, publicProcedure, router } from "./trpc.js";
 
 export const appRouter = router({
   auth: router({
-    login: publicProcedure.input(loginInputSchema).mutation(({ input }) => {
-      const result = authService.login(input);
+    login: publicProcedure.input(loginInputSchema).mutation(async ({ input }) => {
+      const result = await authService.login(input);
 
       if (!result) {
         throw new TRPCError({
