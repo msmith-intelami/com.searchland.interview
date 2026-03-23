@@ -1,15 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  color: #e2e8f0;
-  background: #020617;
-  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  color: #1f3a37;
+  background:
+    radial-gradient(circle at top left, rgba(124, 214, 179, 0.24), transparent 30%),
+    linear-gradient(180deg, #f7fcf7 0%, #eef8f1 55%, #f9fdf8 100%);
+  font-family: "Manrope", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --page-bg: #f6fbf6;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-strong: #ffffff;
+  --border-soft: rgba(42, 84, 71, 0.12);
+  --border-strong: rgba(31, 58, 55, 0.16);
+  --text-main: #16332e;
+  --text-muted: #5e7c73;
+  --brand: #15a46f;
+  --brand-deep: #0d7e57;
+  --shadow-soft: 0 30px 80px rgba(31, 58, 55, 0.08);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--text-main);
 }
 
 a {
@@ -19,6 +33,11 @@ a {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
+}
+
+#root {
+  min-height: 100vh;
 }

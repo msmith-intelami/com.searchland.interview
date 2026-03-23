@@ -31,37 +31,37 @@ export function LoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-md rounded-[2rem] border border-white/10 bg-slate-900/70 p-8 shadow-xl shadow-slate-950/30">
-      <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Authentication</p>
-      <h2 className="mt-3 text-3xl font-semibold">Sign in</h2>
-      <p className="mt-3 text-slate-300">Use the configured app credentials to access protected feedback routes.</p>
+    <section className="mx-auto max-w-md rounded-[2.25rem] border border-[var(--border-soft)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
+      <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">Authentication</p>
+      <h2 className="mt-3 text-3xl font-semibold text-slate-900">Sign in</h2>
+      <p className="mt-3 text-slate-600">Use the configured app credentials to access protected feedback routes.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-300">Email</span>
+          <span className="mb-2 block text-sm font-medium text-slate-700">Email</span>
           <input
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             type="email"
             required
-            className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none"
+            className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
           />
         </label>
         <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-300">Password</span>
+          <span className="mb-2 block text-sm font-medium text-slate-700">Password</span>
           <input
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             type="password"
             required
-            className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none"
+            className="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
           />
         </label>
-        {error ? <p className="text-sm text-rose-300">{error}</p> : null}
+        {error ? <p className="text-sm text-rose-600">{error}</p> : null}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-full bg-cyan-400 px-5 py-3 font-medium text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-900"
+          className="w-full rounded-full bg-emerald-600 px-5 py-3 font-semibold text-emerald-50 transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
         >
           {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
