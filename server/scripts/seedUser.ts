@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { db } from "../db/client.js";
-import { users } from "../db/schema.js";
+import { db } from "../infrastructure/persistence/postgres.js";
+import { users } from "../infrastructure/persistence/schema.js";
 
 async function main() {
   const email = process.env.SEED_USER_EMAIL ?? "admin@example.com";
