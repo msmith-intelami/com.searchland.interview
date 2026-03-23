@@ -4,8 +4,10 @@ import cors from "cors";
 import express, { type Application, type Request, type Response } from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { InversifyExpressServer } from "inversify-express-utils";
+import { getBearerToken } from "./auth/token.js";
 import { db } from "./db/client.js";
 import { container } from "./inversify/container.js";
+import { authService } from "./services/authService.js";
 import { appRouter } from "./trpc/router.js";
 
 const port = Number(process.env.PORT ?? 3001);
@@ -20,6 +22,11 @@ server.setConfig((app: Application) => {
       credentials: true,
     }),
   );
+  app.use((req, _res, next) => {
+    const token = getBearerToken(req);
+    req.user = token ? authService.verifyToken(token) : null;
+    next();
+  });
 });
 
 const app = server.build();
@@ -28,7 +35,7 @@ app.use(
   "/trpc",
   createExpressMiddleware({
     router: appRouter,
-    createContext: () => ({ db }),
+    createContext: ({ req }) => ({ db, user: req.user ?? null }),
   }),
 );
 

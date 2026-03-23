@@ -25,6 +25,7 @@ export function HomePage() {
         <ul className="mt-4 space-y-3 text-slate-300">
           <li>React + TypeScript + Vite</li>
           <li>React Router for multi-page UI</li>
+          <li>JWT-based authentication</li>
           <li>tRPC client/server wiring</li>
           <li>Drizzle schema and database access</li>
           <li>Feedback create, read, update, delete flow</li>

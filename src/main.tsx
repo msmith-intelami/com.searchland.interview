@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import superjson from "superjson";
 import type { AppRouter } from "../server/trpc/router";
 import { App } from "./App";
+import { readStoredToken } from "./lib/auth";
 import "./index.css";
 
 export const trpc = createTRPCReact<AppRouter>();
@@ -16,6 +17,15 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: import.meta.env.VITE_API_URL ?? "http://localhost:3001/trpc",
       transformer: superjson,
+      headers() {
+        const token = readStoredToken();
+
+        return token
+          ? {
+              authorization: `Bearer ${token}`,
+            }
+          : {};
+      },
     }),
   ],
 });

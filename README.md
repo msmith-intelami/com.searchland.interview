@@ -7,6 +7,7 @@ Small full-stack interview scaffold:
 - React Router for multi-page navigation
 - Node + Express API
 - Inversify controller-based REST endpoints
+- Token-based user authentication
 - tRPC for end-to-end typesafe procedures
 - Drizzle ORM with Postgres
 - Basic feedback CRUD
@@ -27,4 +28,5 @@ API runs on `http://localhost:3001`.
 - Tailwind is configured with the first-party Vite plugin.
 - Set `CLIENT_ORIGIN` if the frontend runs on a different host or port.
 - REST controllers live under `server/controllers`.
-- `PRIVATE_API_KEY` is optional. If set, requests to controller methods using `@isPrivate()` must send `x-private-key`.
+- Protected routes require a bearer token.
+- Default demo login is `admin@example.com` / `password123` unless overridden in `.env`.

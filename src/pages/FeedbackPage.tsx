@@ -1,5 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
+import { useAuth } from "../auth/AuthProvider";
 import { trpc } from "../main";
 
 type FormState = {
@@ -17,6 +18,7 @@ const emptyForm: FormState = {
 };
 
 export function FeedbackPage() {
+  const auth = useAuth();
   const utils = trpc.useUtils();
   const feedbackQuery = trpc.feedback.list.useQuery();
   const createFeedback = trpc.feedback.create.useMutation({
@@ -156,9 +158,12 @@ export function FeedbackPage() {
             <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Feedback list</p>
             <h2 className="mt-2 text-2xl font-semibold">Live records from Postgres</h2>
           </div>
-          <span className="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300">
-            {sortedFeedback.length} items
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300">{auth.user?.email}</span>
+            <span className="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300">
+              {sortedFeedback.length} items
+            </span>
+          </div>
         </div>
 
         <div className="mt-6 space-y-4">

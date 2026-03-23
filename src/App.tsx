@@ -1,6 +1,9 @@
 import { NavLink, Route, Routes } from "react-router-dom";
+import { AuthProvider, useAuth } from "./auth/AuthProvider";
+import { RequireAuth } from "./auth/RequireAuth";
 import { FeedbackPage } from "./pages/FeedbackPage";
 import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
 
 const navClassName = ({ isActive }: { isActive: boolean }) =>
   [
@@ -9,6 +12,16 @@ const navClassName = ({ isActive }: { isActive: boolean }) =>
   ].join(" ");
 
 export function App() {
+  return (
+    <AuthProvider>
+      <AppShell />
+    </AuthProvider>
+  );
+}
+
+function AppShell() {
+  const auth = useAuth();
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.18),_transparent_35%),linear-gradient(180deg,_#020617_0%,_#0f172a_100%)] text-slate-100">
       <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-8">
@@ -21,16 +34,39 @@ export function App() {
             <NavLink to="/" className={navClassName} end>
               Home
             </NavLink>
-            <NavLink to="/feedback" className={navClassName}>
-              Feedback
-            </NavLink>
+            {auth.token ? (
+              <>
+                <NavLink to="/feedback" className={navClassName}>
+                  Feedback
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={auth.logout}
+                  className="rounded-full px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <NavLink to="/login" className={navClassName}>
+                Login
+              </NavLink>
+            )}
           </nav>
         </header>
 
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/feedback" element={<FeedbackPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/feedback"
+              element={
+                <RequireAuth>
+                  <FeedbackPage />
+                </RequireAuth>
+              }
+            />
           </Routes>
         </main>
       </div>
