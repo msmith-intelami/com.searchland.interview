@@ -1,8 +1,10 @@
 import type * as express from "express";
 import { inject } from "inversify";
-import { controller, httpDelete, httpGet, httpPost, httpPut, interfaces } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost, httpPut, interfaces, request, response } from "inversify-express-utils";
+import { currentUser } from "../decorators/currentUser.js";
 import { isPrivate } from "../decorators/isPrivate.js";
 import { TYPES } from "../inversify/types.js";
+import type { AuthUser } from "../models/auth.js";
 import { feedbackInputSchema } from "../models/feedback.js";
 import { FeedbackService } from "../services/feedbackService.js";
 
@@ -12,14 +14,19 @@ export class FeedbackController implements interfaces.Controller {
 
   @httpGet("/")
   @isPrivate()
-  public async list(_req: express.Request, res: express.Response): Promise<void> {
+  public async list(
+    @request() _req: express.Request,
+    @response() res: express.Response,
+    @currentUser() currentUser: interfaces.Principal<AuthUser | null>,
+  ): Promise<void> {
     const items = await this.feedbackService.list();
-    res.json(items);
+    res.json({ items, user: currentUser.details });
   }
 
   @httpPost("/")
   @isPrivate()
   public async create(req: express.Request, res: express.Response): Promise<void> {
+    const actor = req.user ?? null;
     const parsed = feedbackInputSchema.safeParse(req.body);
 
     if (!parsed.success) {
@@ -27,13 +34,14 @@ export class FeedbackController implements interfaces.Controller {
       return;
     }
 
-    const created = await this.feedbackService.create(parsed.data);
+    const created = await this.feedbackService.create(parsed.data, actor);
     res.status(201).json(created);
   }
 
   @httpPut("/:id")
   @isPrivate()
   public async update(req: express.Request, res: express.Response): Promise<void> {
+    const actor = req.user ?? null;
     const id = Number(req.params.id);
     const parsed = feedbackInputSchema.safeParse(req.body);
 
@@ -47,7 +55,7 @@ export class FeedbackController implements interfaces.Controller {
       return;
     }
 
-    const updated = await this.feedbackService.update(id, parsed.data);
+    const updated = await this.feedbackService.update(id, parsed.data, actor);
 
     if (!updated) {
       res.status(404).json({ error: "Feedback entry not found." });
@@ -60,6 +68,7 @@ export class FeedbackController implements interfaces.Controller {
   @httpDelete("/:id")
   @isPrivate()
   public async delete(req: express.Request, res: express.Response): Promise<void> {
+    const actor = req.user ?? null;
     const id = Number(req.params.id);
 
     if (!Number.isInteger(id) || id <= 0) {
@@ -67,7 +76,7 @@ export class FeedbackController implements interfaces.Controller {
       return;
     }
 
-    const deleted = await this.feedbackService.delete(id);
+    const deleted = await this.feedbackService.delete(id, actor);
 
     if (!deleted) {
       res.status(404).json({ error: "Feedback entry not found." });

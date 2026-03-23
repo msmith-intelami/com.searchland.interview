@@ -8,6 +8,8 @@ Small full-stack interview scaffold:
 - Node + Express API
 - Inversify controller-based REST endpoints
 - Token-based user authentication
+- RabbitMQ audit publishing for feedback CRUD writes
+- RabbitMQ audit consumer with MongoDB document storage
 - tRPC for end-to-end typesafe procedures
 - Drizzle ORM with Postgres
 - Basic feedback CRUD
@@ -30,3 +32,6 @@ API runs on `http://localhost:3001`.
 - REST controllers live under `server/controllers`.
 - Protected routes require a bearer token.
 - Default demo login is `admin@example.com` / `password123` unless overridden in `.env`.
+- If `RABBITMQ_URL` is set, feedback create, update, and delete operations publish audit messages to the configured exchange and queue.
+- If both `RABBITMQ_URL` and `MONGODB_URL` are set, the server consumes audit messages and stores them in MongoDB.
+- Authenticated users can view only their own processed audit documents from the Audit page.
