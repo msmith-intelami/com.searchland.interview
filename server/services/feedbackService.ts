@@ -6,6 +6,26 @@ import type { AuthUser } from "../models/auth.js";
 import type { FeedbackInput } from "../models/feedback.js";
 import { auditService } from "./auditService.js";
 
+function toAuditSnapshot(record: {
+  id: number;
+  author: string;
+  email: string;
+  message: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}) {
+  return {
+    id: record.id,
+    author: record.author,
+    email: record.email,
+    message: record.message,
+    status: record.status,
+    createdAt: record.createdAt.toISOString(),
+    updatedAt: record.updatedAt.toISOString(),
+  };
+}
+
 @injectable()
 export class FeedbackService {
   public async list() {
@@ -20,13 +40,19 @@ export class FeedbackService {
       entityId: created.id,
       actor,
       metadata: {
-        status: created.status,
+        record: toAuditSnapshot(created),
       },
     });
     return created;
   }
 
   public async update(id: number, input: FeedbackInput, actor: AuthUser | null = null) {
+    const [existing] = await db.select().from(feedback).where(eq(feedback.id, id)).limit(1);
+
+    if (!existing) {
+      return null;
+    }
+
     const [updated] = await db
       .update(feedback)
       .set({
@@ -43,7 +69,8 @@ export class FeedbackService {
         entityId: updated.id,
         actor,
         metadata: {
-          status: updated.status,
+          before: toAuditSnapshot(existing),
+          after: toAuditSnapshot(updated),
         },
       });
     }
@@ -61,7 +88,7 @@ export class FeedbackService {
         entityId: deleted.id,
         actor,
         metadata: {
-          status: deleted.status,
+          record: toAuditSnapshot(deleted),
         },
       });
     }

@@ -1,15 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
 import { injectable } from "inversify";
 import { interfaces } from "inversify-express-utils";
-import { authService } from "../services/authService.js";
+import { resolveRequestUser } from "../auth/resolveRequestUser.js";
 import type { AuthUser } from "../models/auth.js";
 
 @injectable()
 export class AppAuthProvider implements interfaces.AuthProvider {
   public async getUser(req: Request, _res: Response, _next: NextFunction): Promise<interfaces.Principal<AuthUser | null>> {
-    const authorization = req.header("authorization");
-    const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
-    const user = token ? authService.verifyToken(token) : null;
+    const user = resolveRequestUser(req);
 
     return {
       details: user,

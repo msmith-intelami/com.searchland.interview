@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { authService } from "../services/authService.js";
+import { resolveRequestUser } from "../auth/resolveRequestUser.js";
 
 type ControllerMethod = (req: Request, res: Response, ...args: unknown[]) => unknown;
 
@@ -8,9 +8,7 @@ export function isPrivate() {
     const original = descriptor.value as ControllerMethod;
 
     const decoratedMethod: ControllerMethod = function decoratedMethod(this: unknown, req, res, ...args) {
-      const authorization = req.header("authorization");
-      const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
-      const user = token ? authService.verifyToken(token) : null;
+      const user = resolveRequestUser(req);
 
       if (!user) {
         res.status(401).json({ error: "Unauthorized" });

@@ -1,6 +1,7 @@
 import type * as express from "express";
 import { inject } from "inversify";
 import { controller, httpGet, httpPost, interfaces } from "inversify-express-utils";
+import { getBearerToken } from "../auth/resolveRequestUser.js";
 import { loginInputSchema } from "../models/auth.js";
 import { AuthService } from "../services/authService.js";
 
@@ -29,8 +30,7 @@ export class AuthController implements interfaces.Controller {
 
   @httpGet("/me")
   public async me(req: express.Request, res: express.Response): Promise<void> {
-    const authorization = req.header("authorization");
-    const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
+    const token = getBearerToken(req);
 
     if (!token) {
       res.status(401).json({ error: "Missing bearer token." });

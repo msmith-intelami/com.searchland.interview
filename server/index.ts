@@ -4,8 +4,8 @@ import cors from "cors";
 import express from "express";
 import { InversifyExpressServer } from "inversify-express-utils";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { resolveRequestUser } from "./auth/resolveRequestUser.js";
 import { container } from "./inversify/container.js";
-import { authService } from "./services/authService.js";
 import { auditConsumerService } from "./services/auditConsumerService.js";
 import { db } from "./db/client.js";
 import { appRouter } from "./trpc/router.js";
@@ -23,9 +23,7 @@ server.setConfig((app) => {
     }),
   );
   app.use((req, _res, next) => {
-    const authorization = req.header("authorization");
-    const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
-    req.user = token ? authService.verifyToken(token) : null;
+    req.user = resolveRequestUser(req);
     next();
   });
   app.use(
