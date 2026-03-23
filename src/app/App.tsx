@@ -1,10 +1,10 @@
 import { NavLink, Route, Routes } from "react-router-dom";
-import { AuthProvider, useAuth } from "./auth/AuthProvider";
-import { RequireAuth } from "./auth/RequireAuth";
-import { AuditPage } from "./pages/AuditPage";
-import { FeedbackPage } from "./pages/FeedbackPage";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
+import { AuditPage } from "../pages/AuditPage";
+import { FeedbackPage } from "../pages/FeedbackPage";
+import { HomePage } from "../pages/HomePage";
+import { LoginPage } from "../pages/LoginPage";
+import { AuthProvider, useAuth } from "../shared/auth/AuthProvider";
+import { RequireAuth } from "../shared/auth/RequireAuth";
 
 const navClassName = ({ isActive }: { isActive: boolean }) =>
   [

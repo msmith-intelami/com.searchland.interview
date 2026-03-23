@@ -3,14 +3,13 @@ import { inject } from "inversify";
 import { controller, httpDelete, httpGet, httpPost, httpPut, interfaces, request, response } from "inversify-express-utils";
 import { currentUser } from "../decorators/currentUser.js";
 import { isPrivate } from "../decorators/isPrivate.js";
-import { TYPES } from "../inversify/types.js";
 import type { AuthUser } from "../models/auth.js";
 import { feedbackInputSchema } from "../models/feedback.js";
 import { FeedbackService } from "../services/feedbackService.js";
 
 @controller("/feedback")
 export class FeedbackController implements interfaces.Controller {
-  public constructor(@inject(TYPES.FeedbackService) private readonly feedbackService: FeedbackService) {}
+  public constructor(@inject(FeedbackService) private readonly feedbackService: FeedbackService) {}
 
   @httpGet("/")
   @isPrivate()

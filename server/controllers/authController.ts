@@ -1,14 +1,12 @@
 import type * as express from "express";
 import { inject } from "inversify";
 import { controller, httpGet, httpPost, interfaces } from "inversify-express-utils";
-import { getBearerToken } from "../auth/token.js";
-import { TYPES } from "../inversify/types.js";
 import { loginInputSchema } from "../models/auth.js";
 import { AuthService } from "../services/authService.js";
 
 @controller("/auth")
 export class AuthController implements interfaces.Controller {
-  public constructor(@inject(TYPES.AuthService) private readonly authService: AuthService) {}
+  public constructor(@inject(AuthService) private readonly authService: AuthService) {}
 
   @httpPost("/login")
   public async login(req: express.Request, res: express.Response): Promise<void> {
@@ -31,7 +29,8 @@ export class AuthController implements interfaces.Controller {
 
   @httpGet("/me")
   public async me(req: express.Request, res: express.Response): Promise<void> {
-    const token = getBearerToken(req);
+    const authorization = req.header("authorization");
+    const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
 
     if (!token) {
       res.status(401).json({ error: "Missing bearer token." });

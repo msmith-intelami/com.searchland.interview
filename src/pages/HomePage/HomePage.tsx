@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { IncludedList } from "./components/IncludedList";
 
 export function HomePage() {
   return (
@@ -27,15 +28,7 @@ export function HomePage() {
 
       <div className="rounded-lg border border-[var(--border-soft)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
         <h3 className="text-lg font-semibold text-slate-900">Included</h3>
-        <ul className="mt-4 space-y-3 text-slate-600">
-          <li>React + TypeScript + Vite</li>
-          <li>React Router for multi-page UI</li>
-          <li>JWT-based authentication</li>
-          <li>RabbitMQ to MongoDB audit processing</li>
-          <li>tRPC client/server wiring</li>
-          <li>Drizzle schema and database access</li>
-          <li>Feedback create, read, update, delete flow</li>
-        </ul>
+        <IncludedList />
       </div>
     </section>
   );

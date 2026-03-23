@@ -1,8 +1,9 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/AuthProvider";
-import { loginWithPassword } from "../lib/authApi";
+import { loginWithPassword } from "../../shared/services/authApi";
+import { useAuth } from "../../shared/auth/AuthProvider";
+import { LoginField } from "./components/LoginField";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -37,26 +38,8 @@ export function LoginPage() {
       <p className="mt-3 text-slate-600">Use the configured app credentials to access protected feedback routes.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-        <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-700">Email</span>
-          <input
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            type="email"
-            required
-            className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
-          />
-        </label>
-        <label className="block">
-          <span className="mb-2 block text-sm font-medium text-slate-700">Password</span>
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
-            required
-            className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-400"
-          />
-        </label>
+        <LoginField label="Email" type="email" value={email} onChange={setEmail} />
+        <LoginField label="Password" type="password" value={password} onChange={setPassword} />
         {error ? <p className="text-sm text-rose-600">{error}</p> : null}
         <button
           type="submit"

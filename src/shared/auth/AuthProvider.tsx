@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { clearStoredToken, readStoredToken, storeToken, type AuthState, type AuthUser } from "../lib/auth";
-import { fetchAuthenticatedUser } from "../lib/authApi";
+import { fetchAuthenticatedUser } from "../services/authApi";
+import { clearStoredToken, readStoredToken, storeToken, type AuthState, type AuthUser } from "./storage";
 
 type AuthContextValue = AuthState & {
   isReady: boolean;

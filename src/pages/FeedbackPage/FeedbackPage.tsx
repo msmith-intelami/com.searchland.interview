@@ -1,7 +1,9 @@
-import type { FormEvent, ReactNode } from "react";
+import type { FormEvent } from "react";
 import { useState } from "react";
-import { useAuth } from "../auth/AuthProvider";
-import { trpc } from "../main";
+import { useAuth } from "../../shared/auth/AuthProvider";
+import { trpc } from "../../shared/api/trpc";
+import { EmptyState } from "./components/EmptyState";
+import { Field } from "./components/Field";
 
 type FormState = {
   author: string;
@@ -48,7 +50,6 @@ export function FeedbackPage() {
   );
 
   const isSaving = createFeedback.isPending || updateFeedback.isPending;
-
   const submitLabel = editingId ? "Update feedback" : "Create feedback";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -159,7 +160,9 @@ export function FeedbackPage() {
             <h2 className="mt-2 text-2xl font-semibold text-slate-900">Live records from Postgres</h2>
           </div>
           <div className="flex items-center gap-3">
-            <span className="rounded-sm border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">{auth.user?.email}</span>
+            <span className="rounded-sm border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
+              {auth.user?.email}
+            </span>
             <span className="rounded-sm border border-[var(--border-soft)] bg-white px-4 py-2 text-sm text-slate-600">
               {sortedFeedback.length} items
             </span>
@@ -174,7 +177,10 @@ export function FeedbackPage() {
           ) : null}
 
           {sortedFeedback.map((item) => (
-            <article key={item.id} className="rounded-md border border-[var(--border-soft)] bg-white p-5 shadow-[0_18px_40px_rgba(31,58,55,0.05)]">
+            <article
+              key={item.id}
+              className="rounded-md border border-[var(--border-soft)] bg-white p-5 shadow-[0_18px_40px_rgba(31,58,55,0.05)]"
+            >
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <div className="flex items-center gap-3">
@@ -211,22 +217,5 @@ export function FeedbackPage() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Field(props: { label: string; children: ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-medium text-slate-700">{props.label}</span>
-      {props.children}
-    </label>
-  );
-}
-
-function EmptyState(props: { label: string }) {
-  return (
-    <div className="rounded-md border border-dashed border-emerald-100 bg-emerald-50/60 p-6 text-center text-slate-500">
-      {props.label}
-    </div>
   );
 }

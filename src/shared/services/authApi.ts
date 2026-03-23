@@ -1,4 +1,4 @@
-import type { AuthUser } from "./auth";
+import type { AuthUser } from "../auth/storage";
 
 type LoginResponse = {
   token: string;

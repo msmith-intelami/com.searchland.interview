@@ -9,7 +9,6 @@ import { authService } from "./services/authService.js";
 import { auditConsumerService } from "./services/auditConsumerService.js";
 import { db } from "./db/client.js";
 import { appRouter } from "./trpc/router.js";
-import { getBearerToken } from "./auth/token.js";
 
 const port = Number(process.env.PORT ?? 3001);
 const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
@@ -24,7 +23,8 @@ server.setConfig((app) => {
     }),
   );
   app.use((req, _res, next) => {
-    const token = getBearerToken(req);
+    const authorization = req.header("authorization");
+    const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : null;
     req.user = token ? authService.verifyToken(token) : null;
     next();
   });
