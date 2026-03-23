@@ -8,6 +8,8 @@ export function isPrivate() {
     const original = descriptor.value as ControllerMethod;
 
     const decoratedMethod: ControllerMethod = function decoratedMethod(this: unknown, req, res, ...args) {
+      // Reuse the shared request-user resolver so decorator-protected controllers
+      // follow the same auth rules as REST auth endpoints and tRPC procedures.
       const user = resolveRequestUser(req);
 
       if (!user) {

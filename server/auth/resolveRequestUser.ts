@@ -12,6 +12,8 @@ export function getBearerToken(request: Request) {
 }
 
 export function resolveRequestUser(request: Request) {
+  // Centralising token extraction and verification prevents controller decorators,
+  // auth endpoints, and tRPC context creation from drifting apart over time.
   const token = getBearerToken(request);
   return token ? authService.verifyToken(token) : null;
 }

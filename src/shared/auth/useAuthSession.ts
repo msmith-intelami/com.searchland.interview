@@ -20,6 +20,9 @@ export function useAuthSession() {
   const [authState, setAuthState] = useState<AuthSessionState>(getInitialAuthSessionState);
 
   useEffect(() => {
+    // On refresh we restore the stored token first, then ask the API who the
+    // current user is. That keeps the browser as the source of session continuity
+    // while the server remains the source of user truth.
     if (!authState.token) {
       setAuthState((current) => (current.isReady ? current : { ...current, isReady: true }));
       return;

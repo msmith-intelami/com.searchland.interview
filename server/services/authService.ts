@@ -11,6 +11,8 @@ type AuthTokenPayload = AuthUser;
 @injectable()
 export class AuthService {
   public async login(input: LoginInput) {
+    // Authentication is database-backed so the app can evolve beyond a demo user
+    // without changing the controller or frontend contracts.
     const [userRecord] = await db.select().from(users).where(eq(users.email, input.email)).limit(1);
 
     if (!userRecord) {
@@ -38,6 +40,7 @@ export class AuthService {
 
   public verifyToken(token: string): AuthUser | null {
     try {
+      // Only the fields the app actually needs are carried in the token payload.
       const payload = jwt.verify(token, this.getJwtSecret()) as AuthTokenPayload;
 
       return {

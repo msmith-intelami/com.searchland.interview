@@ -59,6 +59,8 @@ export class AuditConsumerService {
       });
     } catch (error) {
       console.error("Audit message processing failed", error);
+      // Failed audit messages are dropped instead of requeued to avoid poison-message
+      // loops during local development and interview sessions.
       channel.nack(message, false, false);
     }
   }

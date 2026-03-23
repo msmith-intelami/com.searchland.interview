@@ -15,6 +15,8 @@ function toAuditSnapshot(record: {
   createdAt: Date;
   updatedAt: Date;
 }) {
+  // Audit records intentionally omit the relational primary key so the UI can
+  // show business-relevant changes without leaking internal identifiers.
   return {
     author: record.author,
     email: record.email,
@@ -62,6 +64,8 @@ export class FeedbackService {
       .returning();
 
     if (updated) {
+      // Updates capture both states so the audit view can explain what changed
+      // instead of only recording that a write happened.
       await auditService.publish({
         action: "feedback.updated",
         entity: "feedback",

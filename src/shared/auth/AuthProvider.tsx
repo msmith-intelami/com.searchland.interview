@@ -12,6 +12,8 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider(props: { children: ReactNode }) {
+  // The provider is deliberately thin: session bootstrap and token persistence
+  // live in a hook so the context stays focused on dependency injection for React.
   const authSession = useAuthSession();
 
   return <AuthContext.Provider value={authSession}>{props.children}</AuthContext.Provider>;

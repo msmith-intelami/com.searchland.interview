@@ -62,6 +62,8 @@ function AppShell() {
         </header>
 
         <main className="flex-1">
+          {/* Routing stays intentionally small here: each page folder owns its own
+              UI, while shared auth and API concerns live under src/shared. */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />

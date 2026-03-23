@@ -7,6 +7,8 @@ import { feedbackService } from "../services/feedbackService.js";
 import { protectedProcedure, publicProcedure, router } from "./trpc.js";
 
 export const appRouter = router({
+  // tRPC is the frontend-facing contract. The REST controllers stay available for
+  // conventional API access and for demonstrating the decorator-based backend style.
   auth: router({
     login: publicProcedure.input(loginInputSchema).mutation(async ({ input }) => {
       const result = await authService.login(input);
@@ -40,6 +42,8 @@ export const appRouter = router({
     }),
 
     update: protectedProcedure.input(feedbackUpdateSchema).mutation(async ({ ctx, input }) => {
+      // The service only accepts editable fields. Keeping id separate prevents
+      // accidental attempts to update the record primary key.
       const { id, ...payload } = input;
       const updated = await feedbackService.update(id, payload, ctx.user);
 

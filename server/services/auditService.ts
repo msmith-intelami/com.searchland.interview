@@ -86,6 +86,8 @@ export class AuditService {
 
     await channel.assertExchange(exchangeName, "topic", { durable: true });
     await channel.assertQueue(queueName, { durable: true });
+    // A topic exchange keeps the audit pipeline extensible if additional entity
+    // types are introduced later without changing the queue topology.
     await channel.bindQueue(queueName, exchangeName, "feedback.feedback.*");
 
     logAuditDebug("publisher channel ready", {
