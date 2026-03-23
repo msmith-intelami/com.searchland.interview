@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { injectable } from "inversify";
 import { interfaces } from "inversify-express-utils";
-import { getBearerToken } from "../../shared/auth/token.js";
+import { getBearerToken } from "./token.js";
 import { authService } from "../services/authService.js";
-import type { AuthUser } from "../../domain/models/auth.js";
+import type { AuthUser } from "../models/auth.js";
 
 @injectable()
 export class AppAuthProvider implements interfaces.AuthProvider {

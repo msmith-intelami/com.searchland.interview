@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import type { Filter } from "mongodb";
-import { getDocumentCollection } from "../../infrastructure/persistence/mongo.js";
-import type { AuthUser } from "../../domain/models/auth.js";
-import type { AuditEvent, StoredAuditEvent } from "../../domain/models/audit.js";
-import { logAuditDebug } from "../../shared/utils/debug.js";
+import { getDocumentCollection } from "../db/documentClient.js";
+import type { AuthUser } from "../models/auth.js";
+import type { AuditEvent, StoredAuditEvent } from "../models/audit.js";
+import { logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditLogService {

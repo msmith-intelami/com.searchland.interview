@@ -5,11 +5,11 @@ import express from "express";
 import { InversifyExpressServer } from "inversify-express-utils";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { container } from "./inversify/container.js";
-import { authService } from "./application/services/authService.js";
-import { auditConsumerService } from "./application/services/auditConsumerService.js";
-import { db } from "./infrastructure/persistence/postgres.js";
-import { appRouter } from "./interfaces/trpc/router.js";
-import { getBearerToken } from "./shared/auth/token.js";
+import { authService } from "./services/authService.js";
+import { auditConsumerService } from "./services/auditConsumerService.js";
+import { db } from "./db/client.js";
+import { appRouter } from "./trpc/router.js";
+import { getBearerToken } from "./auth/token.js";
 
 const port = Number(process.env.PORT ?? 3001);
 const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";

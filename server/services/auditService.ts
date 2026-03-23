@@ -1,8 +1,8 @@
 import amqp, { type Channel, type ChannelModel } from "amqplib";
 import { injectable } from "inversify";
-import type { AuthUser } from "../../domain/models/auth.js";
-import type { AuditAction, AuditEntity, AuditEvent } from "../../domain/models/audit.js";
-import { logAuditDebug } from "../../shared/utils/debug.js";
+import type { AuthUser } from "../models/auth.js";
+import type { AuditAction, AuditEntity, AuditEvent } from "../models/audit.js";
+import { logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditService {

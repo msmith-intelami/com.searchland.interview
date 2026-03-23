@@ -1,8 +1,8 @@
 import amqp, { type Channel, type ChannelModel, type ConsumeMessage } from "amqplib";
 import { injectable } from "inversify";
 import { auditLogService } from "./auditLogService.js";
-import type { AuditEvent } from "../../domain/models/audit.js";
-import { logAuditDebug } from "../../shared/utils/debug.js";
+import type { AuditEvent } from "../models/audit.js";
+import { logAuditDebug } from "../utils/debug.js";
 
 @injectable()
 export class AuditConsumerService {
