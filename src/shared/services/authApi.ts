@@ -36,6 +36,10 @@ export async function fetchAuthenticatedUser(token: string) {
 }
 
 function getServerBaseUrl() {
-  const trpcUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3001/trpc";
+  const trpcUrl = getViteApiUrl();
   return trpcUrl.replace(/\/trpc$/, "");
+}
+
+function getViteApiUrl() {
+  return (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env?.VITE_API_URL ?? "http://localhost:3001/trpc";
 }
