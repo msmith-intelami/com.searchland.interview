@@ -10,6 +10,7 @@ Small full-stack interview scaffold:
 - Token-based user authentication with hashed passwords in Postgres
 - RabbitMQ audit publishing for feedback CRUD writes
 - RabbitMQ audit consumer with MongoDB document storage
+- Optional Elasticsearch-backed feedback search
 - tRPC for end-to-end typesafe procedures
 - Drizzle ORM with Postgres
 - Basic feedback CRUD
@@ -36,10 +37,24 @@ API runs on `http://localhost:3001`.
 - The seed command uses `SEED_USER_NAME`, `SEED_USER_EMAIL`, and `SEED_USER_PASSWORD` .
 - Set `AUDIT_ENABLED=false` if RabbitMQ and MongoDB are not installed. In that mode, feedback CRUD still works and the Audit page stays empty.
 - Set `AUDIT_ENABLED=true` to enable RabbitMQ publishing, RabbitMQ consuming, and MongoDB audit storage.
+- Set `ELASTICSEARCH_URL` to enable feedback indexing and Elasticsearch-powered search. Without it, search falls back to Postgres `ILIKE` matching.
 - When audit is enabled, `RABBITMQ_URL` configures RabbitMQ publishing for feedback create, update, and delete operations.
 - When audit is enabled, `MONGODB_URL` configures MongoDB storage for processed audit messages.
+- `ELASTICSEARCH_FEEDBACK_INDEX` optionally overrides the feedback index name. The default is `feedback`.
+- `ELASTICSEARCH_API_KEY` optionally configures API-key authentication for managed Elasticsearch deployments.
 - Authenticated users can view only their own processed audit documents from the Audit page.
 - Set `AUDIT_DEBUG=true` to log RabbitMQ publish/consume and Mongo persistence activity in the server console.
+
+## Elasticsearch setup
+
+For local Elasticsearch, add this to `.env`:
+
+```env
+ELASTICSEARCH_URL=http://127.0.0.1:9200
+ELASTICSEARCH_FEEDBACK_INDEX=feedback
+```
+
+Once configured, consumed RabbitMQ audit messages create, update, or delete feedback documents in Elasticsearch, and the feedback page search box queries that index through tRPC.
 
 ## macOS audit setup
 

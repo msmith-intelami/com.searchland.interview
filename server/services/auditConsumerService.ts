@@ -1,6 +1,7 @@
 import amqp, { type Channel, type ChannelModel, type ConsumeMessage } from "amqplib";
 import { injectable } from "inversify";
 import { auditLogService } from "./auditLogService.js";
+import { feedbackSearchSyncService } from "./feedbackSearchSyncService.js";
 import type { AuditEvent } from "../models/audit.js";
 import { isAuditSystemEnabled, logAuditDebug } from "../utils/debug.js";
 
@@ -52,6 +53,7 @@ export class AuditConsumerService {
         actorId: event.actor?.id ?? null,
       });
       await auditLogService.insert(event, message.fields.routingKey);
+      await feedbackSearchSyncService.syncFromAuditEvent(event);
       channel.ack(message);
       logAuditDebug("consumer acknowledged message", {
         routingKey: message.fields.routingKey,

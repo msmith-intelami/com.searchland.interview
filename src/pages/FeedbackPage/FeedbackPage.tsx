@@ -22,30 +22,41 @@ const emptyForm: FormState = {
 export function FeedbackPage() {
   const auth = useAuth();
   const utils = trpc.useUtils();
-  const feedbackQuery = trpc.feedback.list.useQuery();
+  const [searchQuery, setSearchQuery] = useState("");
+  const normalizedSearchQuery = searchQuery.trim();
+  const feedbackListQuery = trpc.feedback.list.useQuery(undefined, {
+    enabled: normalizedSearchQuery.length === 0,
+  });
+  const feedbackSearchQuery = trpc.feedback.search.useQuery(
+    { query: normalizedSearchQuery },
+    {
+      enabled: normalizedSearchQuery.length > 0,
+    },
+  );
   const createFeedback = trpc.feedback.create.useMutation({
     onSuccess: async () => {
       setForm(emptyForm);
-      await utils.feedback.list.invalidate();
+      await Promise.all([utils.feedback.list.invalidate(), utils.feedback.search.invalidate()]);
     },
   });
   const updateFeedback = trpc.feedback.update.useMutation({
     onSuccess: async () => {
       setEditingId(null);
       setForm(emptyForm);
-      await utils.feedback.list.invalidate();
+      await Promise.all([utils.feedback.list.invalidate(), utils.feedback.search.invalidate()]);
     },
   });
   const deleteFeedback = trpc.feedback.delete.useMutation({
     onSuccess: async () => {
-      await utils.feedback.list.invalidate();
+      await Promise.all([utils.feedback.list.invalidate(), utils.feedback.search.invalidate()]);
     },
   });
 
   const [form, setForm] = useState<FormState>(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const activeFeedbackQuery = normalizedSearchQuery.length > 0 ? feedbackSearchQuery : feedbackListQuery;
 
-  const sortedFeedback = [...(feedbackQuery.data ?? [])].sort(
+  const sortedFeedback = [...(activeFeedbackQuery.data ?? [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
@@ -157,7 +168,7 @@ export function FeedbackPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.32em] text-emerald-700">Feedback list</p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900">Live records from Postgres</h2>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-900">Live records with Elasticsearch search</h2>
           </div>
           <div className="flex items-center gap-3">
             <span className="rounded-sm border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
@@ -169,11 +180,26 @@ export function FeedbackPage() {
           </div>
         </div>
 
+        <div className="mt-6">
+          <input
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            className="w-full rounded-md border border-emerald-100 bg-white px-4 py-3 text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-emerald-400"
+            placeholder="Search by author, email, message, or status"
+          />
+        </div>
+
         <div className="mt-6 space-y-4">
-          {feedbackQuery.isLoading ? <EmptyState label="Loading feedback..." /> : null}
-          {feedbackQuery.isError ? <EmptyState label="Failed to load feedback." /> : null}
-          {!feedbackQuery.isLoading && !feedbackQuery.isError && sortedFeedback.length === 0 ? (
-            <EmptyState label="No feedback yet. Create the first record from the form." />
+          {activeFeedbackQuery.isLoading ? <EmptyState label="Loading feedback..." /> : null}
+          {activeFeedbackQuery.isError ? <EmptyState label="Failed to load feedback." /> : null}
+          {!activeFeedbackQuery.isLoading && !activeFeedbackQuery.isError && sortedFeedback.length === 0 ? (
+            <EmptyState
+              label={
+                normalizedSearchQuery.length > 0
+                  ? "No feedback matched the current search."
+                  : "No feedback yet. Create the first record from the form."
+              }
+            />
           ) : null}
 
           {sortedFeedback.map((item) => (

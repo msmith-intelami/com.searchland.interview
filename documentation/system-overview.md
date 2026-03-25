@@ -8,6 +8,7 @@ This application is a small full-stack scaffold for live product and engineering
 - Node/Express server with decorator-based controllers
 - tRPC for typed browser-to-server calls
 - Postgres for core relational data
+- optional Elasticsearch for feedback search
 - optional RabbitMQ plus MongoDB for audit processing
 
 ## High-level flow
@@ -18,9 +19,10 @@ This application is a small full-stack scaffold for live product and engineering
 4. Protected frontend pages call tRPC with that token.
 5. The server resolves the authenticated user once per request.
 6. Feedback CRUD operations read and write Postgres through the `FeedbackService`.
-7. If audit is enabled, feedback writes also publish audit messages to RabbitMQ.
-8. A background consumer reads those messages and stores processed audit documents in MongoDB.
-9. The frontend audit page loads only the current user's stored audit documents.
+7. If audit is enabled, feedback writes publish audit messages to RabbitMQ.
+8. If Elasticsearch is configured, the background consumer uses those messages to create, update, or delete feedback search documents.
+9. The same consumer also stores processed audit documents in MongoDB.
+10. The frontend audit page loads only the current user's stored audit documents.
 
 ## Current runtime boundaries
 

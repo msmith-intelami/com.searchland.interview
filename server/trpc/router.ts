@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { loginInputSchema } from "../models/auth.js";
 import { feedbackIdSchema, feedbackInputSchema, feedbackUpdateSchema } from "../models/feedback.js";
+import { feedbackSearchInputSchema } from "../models/search.js";
 import { authService } from "../services/authService.js";
 import { auditLogService } from "../services/auditLogService.js";
 import { feedbackService } from "../services/feedbackService.js";
@@ -35,6 +36,10 @@ export const appRouter = router({
   feedback: router({
     list: protectedProcedure.query(async () => {
       return feedbackService.list();
+    }),
+
+    search: protectedProcedure.input(feedbackSearchInputSchema).query(async ({ input }) => {
+      return feedbackService.search(input.query);
     }),
 
     create: protectedProcedure.input(feedbackInputSchema).mutation(async ({ ctx, input }) => {
